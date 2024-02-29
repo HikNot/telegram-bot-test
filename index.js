@@ -23,41 +23,49 @@ const start = () => {
     if (text === "/start") {
       await bot.sendSticker(
         chatId,
-        "https://tlgrm.ru/_/stickers/0eb/bdf/0ebbdf11-24fb-4e02-8fd0-b085d6d5401d/3.webp"
+        "https://tlgrm.ru/_/stickers/fb8/e68/fb8e68b7-7df0-3022-bb2c-0bb6d745039e/1.webp",
       );
       return bot.sendMessage(
         chatId,
-        "Салам! Выбери то, что тебе нужно в пункте меню!"
+        "Привет! Выбери то, что тебе нужно в пункте меню!",
       );
     }
 
     if (text === "/info") {
       await bot.sendSticker(
         chatId,
-        "https://tlgrm.ru/_/stickers/0eb/bdf/0ebbdf11-24fb-4e02-8fd0-b085d6d5401d/12.webp"
+        "https://tlgrm.ru/_/stickers/fb8/e68/fb8e68b7-7df0-3022-bb2c-0bb6d745039e/22.webp",
       );
       return bot.sendMessage(
         chatId,
-        `Я пока что ничего не умею, но в скором времени исправлюсь. Держи шутку: Приходит муж к жене и говорит:
-                    "Слушай, а может ты мне сегодня минет сделаешь?,
-                    жена: "А может тебе еще и член отсосать?"`
+        `Привет, ${msg.from.username}!\nМеня зовут Генри ВПНов и я могу сгенирировать уникальный VPN ключ специально для тебя!\nДля того, чтобы я смог это сделать, нам нужно познакомитсья и тогда с смогу тебя узнавать :)\nДля этого нажми на команду /reg из списка команд\nПосле я смогу создать для тебя ключ VPN по нажатию на команду /vpn\nМне очень приятно с тобой познакомиться ^_^\nНадеюсь мы станем хорошими друзьями!\nЗа весь функционал спасибо @HikNot и @zaiden54`,
       );
     }
 
     if (text === "/reg") {
-      const user = await User.create({
-        user_name: msg.from.username,
-        user_id: msg.from.id,
+      const [user, created] = await User.findOrCreate({
+        where: { user_name: msg.from.username, user_id: msg.from.id },
       });
 
-      console.log(user);
+      if (created) {
+        await bot.sendSticker(chatId, "https://tlgrm.ru/_/stickers/fb8/e68/fb8e68b7-7df0-3022-bb2c-0bb6d745039e/16.webp");
+        return bot.sendMessage(chatId, `Добро пожаловать ${msg.from.username}\nВыбери из списка меню, что я могу сделать для тебя :)`);
+      }
+      await bot.sendSticker(chatId, "https://tlgrm.ru/_/stickers/fb8/e68/fb8e68b7-7df0-3022-bb2c-0bb6d745039e/29.webp");
+      return bot.sendMessage(chatId, `${msg.from.username}, Я рад снова тебя видеть!\nВыбери из списка команд, что я могу для тебя сделать`);
+    }
+
+    if (text === "/vpn") {
+      const response = await fetch("/", {
+        method: "GET",
+      });
+      const result = await response.json();
+      console.log(result);
     }
 
     console.log(msg);
-    return bot.sendMessage(
-      chatId,
-      "Я не понимаю тебя. Выбери команду из доступного списка!"
-    );
+    await bot.sendSticker(chatId, "https://tlgrm.ru/_/stickers/fb8/e68/fb8e68b7-7df0-3022-bb2c-0bb6d745039e/65.webp");
+    return bot.sendMessage(chatId, "Я не понимаю тебя. Выбери команду из доступного списка!");
   });
 };
 
